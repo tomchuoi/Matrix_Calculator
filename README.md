@@ -13,7 +13,7 @@ This program performs various operations on matrices, such as matrix addition, s
   - Matrix Rank: It can calculate the rank of a matrix.
   - Generating Random Matrix: It can generate a random matrix of specified dimensions and store it in a file.
 
-## Note
+## Notes
   - The Python version of the program uses the Tkinter library to provide a graphical user interface (GUI) with menus and buttons.
   - On the other hand, the C version of the program displays the menu and options in the console, providing a command-line interface (CLI) for user interaction.
   - The Program Design and Operation Report was written in Vietnamese and for the python version of the program.
