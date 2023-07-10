@@ -1,7 +1,8 @@
 import numpy as np
 
-file_path = "/Users/hungbach/Bài tập lớn/matrix.txt"
-file_path2 = "/Users/hungbach/Bài tập lớn/matrix2.txt"
+# Điền đường dẫn file input vào đây 🗿
+file_path = "matrix.txt"
+file_path2 = "matrix2.txt" 
 
 def read_matrix(file_path):
     with open(file_path, 'r') as file:
@@ -159,7 +160,6 @@ def matrix_determinant(matrix):
 
     det = 0
 
-    # Recursive cofactor expansion
     for j in range(n):
         sign = (-1) ** j
         cofactor = matrix_determinant(submatrix(matrix, 0, j))
