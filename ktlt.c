@@ -197,7 +197,6 @@ Matrix* gauss_jordan_inverse(const Matrix* matrix) {
 
     // Áp dụng thuật toán Gauss-Jordan
     for (int i = 0; i < n; i++) {
-        // Find the pivot element in the column i
         int pivot_row = i;
      
         // Biến đổi phần tử trên hầng chéo chính về 1
@@ -348,8 +347,8 @@ void free_matrix(Matrix* matrix) {
 
 int main() {
     // Đường dẫn tới file chứa ma trận
-    const char* file_path1 = "/Users/hungbach/Bài tập lớn/matrix.txt";
-    const char* file_path2 = "/Users/hungbach/Bài tập lớn/matrix2.txt";
+    const char* file_path1 = "matrix.txt";
+    const char* file_path2 = "matrix2.txt";
 
     // Đọc ma trận từ file
     Matrix* matrix1 = read_matrix(file_path1);
