@@ -16,3 +16,4 @@ This program performs various operations on matrices, such as matrix addition, s
 ## Note
   - The Python version of the program uses the Tkinter library to provide a graphical user interface (GUI) with menus and buttons.
   - On the other hand, the C version of the program displays the menu and options in the console, providing a command-line interface (CLI) for user interaction.
+  - The Program Design and Operation Report was written in Vietnamese and for the python version of the program.
