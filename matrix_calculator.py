@@ -1,4 +1,4 @@
-from function import *
+from matrix_functions import *
 import tkinter as tk
 from tkinter import messagebox
 import random
