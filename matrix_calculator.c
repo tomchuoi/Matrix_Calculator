@@ -365,19 +365,21 @@ int main() {
     double rank;
     do {
         // Hiển thị menu
-        printf("\n---- MENU ----\n");
-        printf("1. Hiển thị ma trận 1\n");
-        printf("2. Hiển thị ma trận 2\n");
-        printf("3. Tính tổng hai ma trận\n");
-        printf("4. Tính hiệu hai ma trận\n");
-        printf("5. Tính tích hai ma trận\n");
-        printf("6. Nhân ma trận với một số\n");
-        printf("7. Tìm ma trận nghịch đảo\n");
-        printf("8. Tính định thức của ma trận\n");
-        printf("9. Tính hạng của ma trận\n");
-        printf("10. Tạo ma trận ngẫu nhiên\n");
-        printf("0. Thoát\n");
+        printf("\n------------ MENU --------------\n");
+        printf("| 1. Hiển thị ma trận 1         |\n");
+        printf("| 2. Hiển thị ma trận 2         |\n");
+        printf("| 3. Tính tổng hai ma trận      |\n");
+        printf("| 4. Tính hiệu hai ma trận      |\n");
+        printf("| 5. Tính tích hai ma trận      |\n");
+        printf("| 6. Nhân ma trận với một số    |\n");
+        printf("| 7. Tìm ma trận nghịch đảo     |\n");
+        printf("| 8. Tính định thức của ma trận |\n");
+        printf("| 9. Tính hạng của ma trận      |\n");
+        printf("| 10. Tạo ma trận ngẫu nhiên    |\n");
+        printf("| 0. Thoát                      |\n");
+        printf("---------------------------------\n");
         printf("Chọn một yêu cầu thực hiện: ");
+        
         scanf("%d", &choice);
 
         Matrix* result;
