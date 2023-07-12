@@ -425,7 +425,7 @@ int main() {
     
     do {
         // Hiển thị menu
-printf("\n------------- MENU ----------------\n");
+        printf("\n------------- MENU ----------------\n");
         printf("| 1. Hiển thị ma trận 1             |\n");
         printf("| 2. Hiển thị ma trận 2             |\n");
         printf("| 3. Tính tổng hai ma trận          |\n");
