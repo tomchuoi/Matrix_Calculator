@@ -1,4 +1,3 @@
-// Code được hoàn thành bởi Bạch Ngọc Hưng
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
