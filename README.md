@@ -1,5 +1,5 @@
 # Matrix Calculator
-This program performs various operations on matrices, such as matrix addition, subtraction, multiplication, scalar multiplication, finding the inverse, determinant, and rank of a matrix. It also includes a function to generate a random matrix.
+This program performs various operations on matrices, such as matrix addition, subtraction, multiplication, scalar multiplication, finding the inverse, determinant, eigenvalue, eigenvector and rank of a matrix. It also includes a function to generate a random matrix.
 
 ## Features
 ### The program offers the following features:
