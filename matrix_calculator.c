@@ -1,3 +1,4 @@
+// Code được hoàn thành bởi Bạch Ngọc Hưng
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -337,6 +338,62 @@ double matrix_determinant(const Matrix* matrix) {
     return det;
 }
 
+void find_eigenvalue_and_eigenvector(const Matrix* matrix, double epsilon, int max_iterations, double* eigenvalue, double* eigenvector) {
+    int n = matrix->n;
+
+    // Tạo vectơ riêng
+    for (int i = 0; i < n; i++) {
+        eigenvector[i] = (double)(rand() % 100 + 1);
+    }
+
+    // Chuẩn hoá
+    double norm = 0.0;
+    for (int i = 0; i < n; i++) {
+        norm += eigenvector[i] * eigenvector[i];
+    }
+    norm = sqrt(norm);
+    for (int i = 0; i < n; i++) {
+        eigenvector[i] /= norm;
+    }
+
+    // Dùng thuật toán phép lặp mũ
+    int iterations = 0;
+    double prev_eigenvalue;
+    do {
+        prev_eigenvalue = *eigenvalue;
+
+        // Nhân ma trận vói vectơ riêng
+        double* temp = (double*)malloc(n * sizeof(double));
+        for (int i = 0; i < n; i++) {
+            temp[i] = 0.0;
+            for (int j = 0; j < n; j++) {
+                temp[i] += matrix->data[i][j] * eigenvector[j];
+            }
+        }
+
+        // Tính vectơ riêng mới
+        norm = 0.0;
+        for (int i = 0; i < n; i++) {
+            eigenvector[i] = temp[i];
+            norm += eigenvector[i] * eigenvector[i];
+        }
+        norm = sqrt(norm);
+        for (int i = 0; i < n; i++) {
+            eigenvector[i] /= norm;
+        }
+
+        // Tìm trị riêng
+        *eigenvalue = 0.0;
+        for (int i = 0; i < n; i++) {
+            *eigenvalue += eigenvector[i] * temp[i];
+        }
+
+        free(temp);
+
+        iterations++;
+    } while (fabs(*eigenvalue - prev_eigenvalue) > epsilon && iterations < max_iterations);
+}
+
 void free_matrix(Matrix* matrix) {
     for (int i = 0; i < matrix->m; i++) {
         free(matrix->data[i]);
@@ -363,25 +420,29 @@ int main() {
     double scalar;
     double determinant;
     double rank;
+    double eigenvalue;
+    double* eigenvector = (double*)malloc(matrix1->n * sizeof(double));
+    
     do {
         // Hiển thị menu
-        printf("\n------------ MENU --------------\n");
-        printf("| 1. Hiển thị ma trận 1         |\n");
-        printf("| 2. Hiển thị ma trận 2         |\n");
-        printf("| 3. Tính tổng hai ma trận      |\n");
-        printf("| 4. Tính hiệu hai ma trận      |\n");
-        printf("| 5. Tính tích hai ma trận      |\n");
-        printf("| 6. Nhân ma trận với một số    |\n");
-        printf("| 7. Tìm ma trận nghịch đảo     |\n");
-        printf("| 8. Tính định thức của ma trận |\n");
-        printf("| 9. Tính hạng của ma trận      |\n");
-        printf("| 10. Tạo ma trận ngẫu nhiên    |\n");
-        printf("| 0. Thoát                      |\n");
-        printf("---------------------------------\n");
+printf("\n------------- MENU ----------------\n");
+        printf("| 1. Hiển thị ma trận 1             |\n");
+        printf("| 2. Hiển thị ma trận 2             |\n");
+        printf("| 3. Tính tổng hai ma trận          |\n");
+        printf("| 4. Tính hiệu hai ma trận          |\n");
+        printf("| 5. Tính tích hai ma trận          |\n");
+        printf("| 6. Nhân ma trận với một số        |\n");
+        printf("| 7. Tìm ma trận nghịch đảo         |\n");
+        printf("| 8. Tính định thức của ma trận     |\n");
+        printf("| 9. Tính hạng của ma trận          |\n");
+        printf("| 10. Tạo ma trận ngẫu nhiên        |\n");
+        printf("| 11. Tìm trị riêng và vectơ riêng  |\n");
+        printf("| 0. Thoát                          |\n");
+        printf("-------------------------------------\n");
         printf("Chọn một yêu cầu thực hiện: ");
-        
-        scanf("%d", &choice);
 
+        scanf("%d", &choice);
+        
         Matrix* result;
 
         switch (choice) {
@@ -483,6 +544,23 @@ int main() {
                 // Giải phóng bộ nhớ lưu ma trận cũ và cập nhật ma trận mới
                 free_matrix(matrix1);
                 matrix1 = read_matrix(file_path1);
+                break;
+
+            case 11:
+                find_eigenvalue_and_eigenvector(matrix1, 0.0001, 1000, &eigenvalue, eigenvector);
+                // Chuẩn hoá để đưa phần tử cuối cùn của vectơ riêng về 1
+                double norm = eigenvector[matrix1->n - 1];
+                for (int i = 0; i < matrix1->n; i++){
+                    eigenvector[i] /= norm; // Chia các phần tử trong vectơ riêng cho phần tử cuối cùng
+                }
+                printf("\nGiá trị riêng: %.4lf\n", eigenvalue);
+                printf("Vectơ riêng tương ứng: ");
+                for (int i = 0; i < matrix1->n-1; i++) {
+                    printf("%.4lf ", eigenvector[i]);
+                }
+                printf("1\n");
+
+                free(eigenvector);
                 break;
                 
             case 0:
