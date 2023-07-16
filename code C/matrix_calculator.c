@@ -424,7 +424,6 @@ GtkWidget* current_button = NULL;
 // Khởi tạo ô để người dùng nhập các giá trị
 GtkWidget* entry_rows;
 GtkWidget* entry_cols;
-GtkWidget* result_label;
 GtkWidget* entry_scalar;
 
 // Khởi tạo ô hiển thị ma trận 1 và 2
@@ -693,10 +692,6 @@ void create_menu(GtkWidget* window, Matrix* matrix1, Matrix* matrix2) {
     gtk_box_pack_start(GTK_BOX(vbox), matrix2_label, FALSE, FALSE, 0);
     g_object_set_data(G_OBJECT(window), "matrix2_label", matrix2_label);
 
-    // Tạo ô hiển thị kết quả
-    result_label = gtk_label_new(NULL);
-    gtk_box_pack_start(GTK_BOX(vbox), result_label, FALSE, FALSE, 0);
-
     GtkWidget* label = gtk_label_new("Chọn một yêu cầu thực hiện:");
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 10);
 
@@ -798,9 +793,7 @@ int main(int argc, char* argv[]) {
     Matrix* matrix2 = read_matrix(file_path2);
 
     if (matrix1 == NULL || matrix2 == NULL) {
-        GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Đọc ma trận không thành công!");
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+        show_message("Đọc ma trận không thành công!");
         return 1;
     }
 
