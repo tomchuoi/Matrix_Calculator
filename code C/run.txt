@@ -1,1 +1,5 @@
+After you downloaded the GTK library, copy this line to the terminal to run the matrix_calculator.c.
+
+gcc -o matrix_calculator matrix_calculator.c `pkg-config --libs --cflags gtk+-3.0`
+./matrix_calculator
 
