@@ -656,14 +656,6 @@ void print_matrix2_button_clicked(GtkWidget *widget, gpointer data) {
     
 }
 
-void button_focus_in(GtkWidget* button, gpointer data) {
-    current_button = button;
-}
-
-void button_focus_out(GtkWidget* button, gpointer data) {
-    current_button = NULL;
-}
-
 gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer data) {
     if (event->type == GDK_KEY_PRESS && current_button != NULL) {
         if (event->keyval == GDK_KEY_Up) {
