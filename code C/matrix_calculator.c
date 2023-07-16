@@ -421,10 +421,11 @@ Matrix* matrix2;
 GtkWidget* current_button = NULL;
 
 
-// Khởi tạo ô để người dùng nhập số hàng và số cột
+// Khởi tạo ô để người dùng nhập các giá trị
 GtkWidget* entry_rows;
 GtkWidget* entry_cols;
 GtkWidget* result_label;
+GtkWidget* entry_scalar;
 
 // Khởi tạo ô hiển thị ma trận 1 và 2
 GtkWidget* matrix1_label;
@@ -442,6 +443,22 @@ GtkWidget* create_window() {
 }
 
 // Các hàm trung gian của các phím chức năng để gọi lại các hàm thuật toán tương ứng
+
+void add_button_clicked(GtkWidget *widget, gpointer data) {
+    // Đọc ma trận từ file
+    Matrix* matrix1 = read_matrix(file_path1);
+    Matrix* matrix2 = read_matrix(file_path2);
+
+    Matrix* result = add_matrices(matrix1, matrix2);
+    if (result == NULL) {
+        show_message("Hai ma trận không cùng kích thước!");
+    } else {
+        write_matrix(result, "/Users/hungbach/Bài tập lớn/result.txt");
+        show_message("Tổng hai ma trận đã được lưu vào file!");
+        free_matrix(result);
+
+    }
+}
 
 void add_button_clicked(GtkWidget *widget, gpointer data) {
     // Đọc ma trận từ file
@@ -497,13 +514,11 @@ void inverse_button_clicked(GtkWidget *widget, gpointer data) {
 
     Matrix* result = gauss_jordan_inverse(matrix1);
     if (result == NULL) {
-        printf("\nMa trận không vuông!\n");
+        show_message("Ma trận không vuông!");
     } else {
         write_matrix(result, "/Users/hungbach/Bài tập lớn/result.txt");
-        GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Ma trận nghịch đảo đã được lưu ra file!");
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
-
+        show_message("Ma trận nghịch đảo đã được lưu ra file!");
+        
         free_matrix(result);
     }
 }
@@ -721,6 +736,21 @@ void create_menu(GtkWidget* window, Matrix* matrix1, Matrix* matrix2) {
     GtkWidget* button_multiply = gtk_button_new_with_label("5. Tính tích hai ma trận");
     g_signal_connect(button_multiply, "clicked", G_CALLBACK(multiply_button_clicked), matrices);
     gtk_box_pack_start(GTK_BOX(vbox), button_multiply, FALSE, FALSE, 5);
+
+    // Tạo ô để người dùng nhập số thực vào và nút nhân ma trận với một số thực
+    GtkWidget* scalar_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+    gtk_box_pack_start(GTK_BOX(vbox), scalar_box, FALSE, FALSE, 0);
+
+    GtkWidget* label_scalar = gtk_label_new("Số thực:");
+    gtk_box_pack_start(GTK_BOX(scalar_box), label_scalar, FALSE, FALSE, 5);
+
+    GtkWidget* entry_scalar = gtk_entry_new();
+    gtk_entry_set_text(GTK_ENTRY(entry_scalar), "0");
+    gtk_box_pack_start(GTK_BOX(scalar_box), entry_scalar, FALSE, FALSE, 5);
+
+    GtkWidget* button_multiply_scalar = gtk_button_new_with_label("6. Nhân ma trận với một số thực");
+    g_signal_connect(button_multiply_scalar, "clicked", G_CALLBACK(multiply_scalar_clicked), entry_scalar);
+    gtk_box_pack_start(GTK_BOX(vbox), button_multiply_scalar, FALSE, FALSE, 5);
 
     GtkWidget* button_inverse = gtk_button_new_with_label("7. Tìm ma trận nghịch đảo");
     g_signal_connect(button_inverse, "clicked", G_CALLBACK(inverse_button_clicked), matrices);
