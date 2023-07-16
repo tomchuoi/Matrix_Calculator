@@ -1,3 +1,4 @@
+// Đây là phiên bản không có giao diện đồ hoạ của chương trình mà dùng CLI (command-line-interface)
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
