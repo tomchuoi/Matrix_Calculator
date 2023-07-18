@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctype.h>
 
 typedef struct {
     int m;
@@ -441,23 +442,7 @@ GtkWidget* create_window() {
     return window;
 }
 
-// Các hàm trung gian của các phím chức năng để gọi lại các hàm thuật toán tương ứng
-
-void add_button_clicked(GtkWidget *widget, gpointer data) {
-    // Đọc ma trận từ file
-    Matrix* matrix1 = read_matrix(file_path1);
-    Matrix* matrix2 = read_matrix(file_path2);
-
-    Matrix* result = add_matrices(matrix1, matrix2);
-    if (result == NULL) {
-        show_message("Hai ma trận không cùng kích thước!");
-    } else {
-        write_matrix(result, "/Users/hungbach/Bài tập lớn/result.txt");
-        show_message("Tổng hai ma trận đã được lưu vào file!");
-        free_matrix(result);
-
-    }
-}
+// Các hàm xử lý sự kiện ấn nút để gọi lại các hàm thuật toán tương ứng
 
 void add_button_clicked(GtkWidget *widget, gpointer data) {
     // Đọc ma trận từ file
@@ -584,6 +569,31 @@ void rank_button_clicked(GtkWidget *widget, gpointer data) {
     g_free(result_text);
 }
 
+void multiply_scalar_clicked(GtkWidget *widget, gpointer data) {
+    Matrix * matrix = read_matrix(file_path1);
+    GtkWidget* get_scalar = GTK_WIDGET(data);
+    const gchar* scalar_text = gtk_entry_get_text(GTK_ENTRY(get_scalar));
+
+    // Chuyển đổi scalar nhập từ người dùng thành giá trị số thực
+    double scalar = atof(scalar_text);
+    if (sscanf(scalar_text, "%lf", &scalar) != 1) {
+        show_message("Hệ số không hợp lệ!");
+        return;
+    }
+
+    // Kiểm tra nếu số hàng hoặc số cột chưa được nhập
+    if (strlen(scalar_text) == 0 || strlen(scalar_text) == 0) {
+        show_message("Vui lòng nhập hệ số!");
+        return;
+    }
+
+    Matrix *result = multiply_scalar(matrix, scalar);
+    write_matrix(result, "/Users/hungbach/Bài tập lớn/result.txt");
+    show_message("Kết quả nhân ma trận với một số thực đã được lưu vào file!");
+
+    free_matrix(result);    
+}
+
 void random_matrix_button_clicked(GtkWidget *widget, gpointer data) {
     // Lấy giá trị số hàng và số cột từ người dùng
     GtkWidget* entry_rows = GTK_WIDGET(data);
@@ -592,8 +602,22 @@ void random_matrix_button_clicked(GtkWidget *widget, gpointer data) {
     const gchar* rows_text = gtk_entry_get_text(GTK_ENTRY(entry_rows));
     const gchar* cols_text = gtk_entry_get_text(GTK_ENTRY(entry_cols));
 
+    int i;
+    for (i = 0; rows_text[i] && cols_text[i] != '\0'; i++) {
+        if (!isdigit(rows_text[i] && cols_text[i])) {
+            show_message("Số hàng và số cột phải là số nguyên!");
+            return;
+        }
+    }
+
     int num_rows = atoi(rows_text);
     int num_cols = atoi(cols_text);
+
+    // Kiểm tra nếu số hàng hoặc số cột chưa được nhập
+    if (strlen(rows_text) == 0 || strlen(cols_text) == 0) {
+        show_message("Vui lòng nhập số hàng và số cột!");
+        return;
+    }
 
     const char* file_path = "/Users/hungbach/Bài tập lớn/matrix.txt";
 
