@@ -574,13 +574,16 @@ void multiply_scalar_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget* get_scalar = GTK_WIDGET(data);
     const gchar* scalar_text = gtk_entry_get_text(GTK_ENTRY(get_scalar));
 
-    // Chuyển đổi scalar nhập từ người dùng thành giá trị số thực
+    // Chuyển đổi scalar nhập từ người dùng thành giá trị số thực và kiểm tra
     double scalar = atof(scalar_text);
-    if (sscanf(scalar_text, "%lf", &scalar) != 1) {
-        show_message("Hệ số không hợp lệ!");
-        return;
+    int i;
+    for (i = 0; scalar_text[i] != '\0'; i++) {
+        if (sscanf(&scalar_text[i], "%lf", &scalar) != 1) {
+            show_message("Hệ số không hợp lệ!");
+            return;
+        }
     }
-
+    
     // Kiểm tra nếu số hàng hoặc số cột chưa được nhập
     if (strlen(scalar_text) == 0 || strlen(scalar_text) == 0) {
         show_message("Vui lòng nhập hệ số!");
@@ -756,7 +759,7 @@ void create_menu(GtkWidget* window, Matrix* matrix1, Matrix* matrix2) {
     gtk_box_pack_start(GTK_BOX(scalar_box), label_scalar, FALSE, FALSE, 5);
 
     GtkWidget* entry_scalar = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(entry_scalar), "0");
+    gtk_entry_set_text(GTK_ENTRY(entry_scalar), "");
     gtk_box_pack_start(GTK_BOX(scalar_box), entry_scalar, FALSE, FALSE, 5);
 
     GtkWidget* button_multiply_scalar = gtk_button_new_with_label("6. Nhân ma trận với một số thực");
@@ -783,14 +786,14 @@ void create_menu(GtkWidget* window, Matrix* matrix1, Matrix* matrix2) {
     gtk_box_pack_start(GTK_BOX(hbox), label_rows, FALSE, FALSE, 5);
 
     entry_rows = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(entry_rows), "0");
+    gtk_entry_set_text(GTK_ENTRY(entry_rows), "");
     gtk_box_pack_start(GTK_BOX(hbox), entry_rows, FALSE, FALSE, 5);
 
     GtkWidget* label_cols = gtk_label_new("Số cột:");
     gtk_box_pack_start(GTK_BOX(hbox), label_cols, FALSE, FALSE, 5);
 
     entry_cols = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(entry_cols), "0");
+    gtk_entry_set_text(GTK_ENTRY(entry_cols), "");
     gtk_box_pack_start(GTK_BOX(hbox), entry_cols, FALSE, FALSE, 5);
 
     // Tạo nút "Tạo ma trận ngẫu nhiên"
