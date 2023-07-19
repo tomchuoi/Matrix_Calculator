@@ -294,30 +294,29 @@ double matrix_determinant(const Matrix* matrix) {
     }
 
     double det = 1.0;
-    double lu_matrix[rows][rows];
+    double new_matrix[rows][rows];
 
-    // Khởi tạo ma trận LU (lu_matrix) từ ma trận đầu vào
+    // Khởi tạo ma trận mới từ ma trận đầu vào
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            lu_matrix[i][j] = matrix->data[i][j];
+            new_matrix[i][j] = matrix->data[i][j];
         }
     }
 
-    // Phân rã LU
+    // Khử Gauss
     for (int k = 0; k < rows; k++) {
         for (int i = k + 1; i < rows; i++) {
-            double factor = lu_matrix[i][k] / lu_matrix[k][k];
-            lu_matrix[i][k] = factor;
+            double factor = new_matrix[i][k] / new_matrix[k][k];
 
-            for (int j = k + 1; j < rows; j++) {
-                lu_matrix[i][j] -= factor * lu_matrix[k][j];
+            for (int j = k; j < rows; j++) {
+                new_matrix[i][j] -= factor * new_matrix[k][j];
             }
         }
     }
 
     // Tính định thức
     for (int i = 0; i < rows; i++) {
-        det *= lu_matrix[i][i];
+        det *= new_matrix[i][i];
     }
 
     return det;
