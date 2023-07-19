@@ -582,7 +582,7 @@ void random_matrix_button_clicked(GtkWidget *widget, gpointer data) {
 
     int i;
     for (i = 0; rows_text[i] && cols_text[i] != '\0'; i++) {
-        if (!isdigit(rows_text[i] || !isdigit(cols_text[i])) {
+        if (!isdigit(rows_text[i]) || !isdigit(cols_text[i])) {
             show_message("Số hàng và số cột phải là số nguyên!");
             return;
         }
