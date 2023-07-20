@@ -614,49 +614,59 @@ void random_matrix_button_clicked(GtkWidget *widget, gpointer data) {
     show_message("Ma trận ngẫu nhiên đã được lưu ra file!");
 }
 
-void print_matrix1_button_clicked(GtkWidget *widget, gpointer data) {
-    Matrix* matrix = read_matrix(file_path1);
+// In ma trận ra hộp thoại thông báo trên màn hình
+void display_matrix_dialog(const gchar* title, Matrix* matrix) {
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(title, NULL, GTK_DIALOG_MODAL,
+                                                    "_OK", GTK_RESPONSE_NONE,
+                                                    NULL);
+    gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_NONE);
 
-    // Tạo chuỗi để hiển thị ma trận
-    gchar* matrix_text = g_strdup("");
+    GtkWidget *grid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+    gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
+
+    // Tạo khỏng cách giữa các hàng và cột khi hiển thị ma trận
+    gtk_grid_set_row_spacing(GTK_GRID(grid), 5);
+    gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+
     for (int i = 0; i < matrix->m; i++) {
         for (int j = 0; j < matrix->n; j++) {
-            gchar* number_text = g_strdup_printf("%.2lf ", matrix->data[i][j]);
-            matrix_text = g_strconcat(matrix_text, number_text, NULL);
-            g_free(number_text);
+            gchar number_text[50];
+            g_snprintf(number_text, sizeof(number_text), "%.2lf", matrix->data[i][j]);
+
+            GtkWidget *label = gtk_label_new(number_text);
+            gtk_grid_attach(GTK_GRID(grid), label, j, i, 1, 1);
         }
-        matrix_text = g_strconcat(matrix_text, "\n", NULL);
     }
 
-    // Hiển thị ma trận trong hộp thoại thông báo
-    GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", matrix_text);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), grid, TRUE, TRUE, 0);
+    gtk_widget_show_all(dialog);
+
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
+}
 
-    g_free(matrix_text);
+void print_matrix1_button_clicked(GtkWidget *widget, gpointer data) {
+    Matrix* matrix = read_matrix(file_path1);
+    if (matrix == NULL) {
+        show_message("Lỗi không thể đọc ma trận từ file.");
+        return;
+    }
+
+    display_matrix_dialog("Ma trận 1", matrix);
+    free_matrix(matrix);
 }
 
 void print_matrix2_button_clicked(GtkWidget *widget, gpointer data) {
     Matrix* matrix = read_matrix(file_path2);
-
-    // Tạo chuỗi để hiển thị ma trận
-    gchar* matrix_text = g_strdup("");
-    for (int i = 0; i < matrix->m; i++) {
-        for (int j = 0; j < matrix->n; j++) {
-            gchar* number_text = g_strdup_printf("%.2lf ", matrix->data[i][j]);
-            matrix_text = g_strconcat(matrix_text, number_text, NULL);
-            g_free(number_text);
-        }
-        matrix_text = g_strconcat(matrix_text, "\n", NULL);
+    if (matrix == NULL) {
+        show_message("Lỗi không thể đọc ma trận từ file.");
+        return;
     }
-    GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", matrix_text);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
 
-    g_free(matrix_text);
-    
+    display_matrix_dialog("Ma trận 2", matrix);
+    free_matrix(matrix);
 }
-
 gboolean on_key_press(GtkWidget* widget, GdkEventKey* event, gpointer data) {
     if (event->type == GDK_KEY_PRESS && current_button != NULL) {
         if (event->keyval == GDK_KEY_Up) {
