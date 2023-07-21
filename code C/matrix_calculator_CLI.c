@@ -276,38 +276,6 @@ int calculate_matrix_rank(const Matrix* matrix) {
     return rank;
 }
 
-
-Matrix* submatrix(const Matrix* matrix, int i, int j) {
-    int n = matrix->m;
-
-    Matrix* sub_matrix = (Matrix*)malloc(sizeof(Matrix));
-    sub_matrix->m = n - 1;
-    sub_matrix->n = n - 1;
-    sub_matrix->data = (double**)malloc((n - 1) * sizeof(double*));
-
-    int row_index = 0;
-    for (int row = 0; row < n; row++) {
-        if (row == i) {
-            continue;
-        }
-
-        sub_matrix->data[row_index] = (double*)malloc((n - 1) * sizeof(double));
-
-        int col_index = 0;
-        for (int col = 0; col < n; col++) {
-            if (col == j) {
-                continue;
-            }
-            sub_matrix->data[row_index][col_index] = matrix->data[row][col];
-            col_index++;
-        }
-
-        row_index++;
-    }
-
-    return sub_matrix;
-}
-
 double matrix_determinant(const Matrix* matrix) {
     int rows = matrix->m;
     int cols = matrix->n;
@@ -316,23 +284,28 @@ double matrix_determinant(const Matrix* matrix) {
         return -1;
     }
 
-    if (rows == 2) {
-        return matrix->data[0][0] * matrix->data[1][1] - matrix->data[0][1] * matrix->data[1][0];
+    double det = 1.0;
+    double new_matrix[rows][rows];
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            new_matrix[i][j] = matrix->data[i][j];
+        }
     }
 
-    double det = 0;
-    int sign = 1;
+    for (int k = 0; k < rows; k++) {
+        for (int i = k + 1; i < rows; i++) {
+            double factor = new_matrix[i][k] / new_matrix[k][k];
 
-    for (int j = 0; j < rows; j++) {
-        Matrix* sub_matrix = submatrix(matrix, 0, j);
-        det += sign * matrix->data[0][j] * matrix_determinant(sub_matrix);
-        sign *= -1;
-
-        for (int i = 0; i < sub_matrix->m; i++) {
-            free(sub_matrix->data[i]);
+            for (int j = k; j < rows; j++) {
+                new_matrix[i][j] -= factor * new_matrix[k][j];
+            }
         }
-        free(sub_matrix->data);
-        free(sub_matrix);
+    }
+
+    // Tính định thức
+    for (int i = 0; i < rows; i++) {
+        det *= new_matrix[i][i];
     }
 
     return det;
