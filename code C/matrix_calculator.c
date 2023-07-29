@@ -551,7 +551,7 @@ void multiply_scalar_clicked(GtkWidget *widget, gpointer data) {
     char *end_ptr;
 
     // Chuyển đổi scalar nhập từ người dùng thành giá trị số thực và kiểm tra
-    double scalar = atof(scalar_text, &end_ptr);
+    double scalar = strtod(scalar_text, &end_ptr);
     
     if (*end_ptr != '\0' || end_ptr == scalar_text) {
         show_message("Hệ số không hợp lệ!");
