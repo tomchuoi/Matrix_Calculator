@@ -548,15 +548,14 @@ void multiply_scalar_clicked(GtkWidget *widget, gpointer data) {
     Matrix * matrix = read_matrix(file_path1);
     GtkWidget* get_scalar = GTK_WIDGET(data);
     const gchar* scalar_text = gtk_entry_get_text(GTK_ENTRY(get_scalar));
+    char *end_ptr;
 
     // Chuyển đổi scalar nhập từ người dùng thành giá trị số thực và kiểm tra
-    double scalar = atof(scalar_text);
-    int i;
-    for (i = 0; scalar_text[i] != '\0'; i++) {
-        if (sscanf(&scalar_text[i], "%lf", &scalar) != 1) {
-            show_message("Hệ số không hợp lệ!");
-            return;
-        }
+    double scalar = atof(scalar_text, &end_ptr);
+    
+    if (*end_ptr != '\0' || end_ptr == scalar_text) {
+        show_message("Hệ số không hợp lệ!");
+        return;
     }
     
     // Kiểm tra nếu số hàng hoặc số cột chưa được nhập
