@@ -332,14 +332,7 @@ void find_eigenvalue_and_eigenvector(const Matrix* matrix, double epsilon, int m
 
     // Chuẩn hoá
     double norm = 0.0;
-    for (int i = 0; i < n; i++) {
-        norm += eigenvector[i] * eigenvector[i];
-    }
-    norm = sqrt(norm);
-    for (int i = 0; i < n; i++) {
-        eigenvector[i] /= norm;
-    }
-
+    
     // Dùng thuật toán phép lặp mũ
     int iterations = 0;
     double prev_eigenvalue;
@@ -355,6 +348,12 @@ void find_eigenvalue_and_eigenvector(const Matrix* matrix, double epsilon, int m
             }
         }
 
+         // Tìm trị riêng
+        *eigenvalue = 0.0;
+        for (int i = 0; i < n; i++) {
+            *eigenvalue += eigenvector[i] * temp[i];
+        }
+
         // Tính vectơ riêng mới
         norm = 0.0;
         for (int i = 0; i < n; i++) {
@@ -364,12 +363,6 @@ void find_eigenvalue_and_eigenvector(const Matrix* matrix, double epsilon, int m
         norm = sqrt(norm);
         for (int i = 0; i < n; i++) {
             eigenvector[i] /= norm;
-        }
-
-        // Tìm trị riêng
-        *eigenvalue = 0.0;
-        for (int i = 0; i < n; i++) {
-            *eigenvalue += eigenvector[i] * temp[i];
         }
 
         free(temp);
@@ -502,34 +495,39 @@ void eigenvalue_eigenvector_button_clicked(GtkWidget *widget, gpointer data) {
     Matrix* matrix = read_matrix(file_path1);
 
     int n = matrix->n;
+    int m = matrix->m;
     double epsilon = 0.00001;
     int max_iterations = 100;
     double eigenvalue;
     double* eigenvector = (double*)malloc(n * sizeof(double*));
 
-    find_eigenvalue_and_eigenvector(matrix, epsilon, max_iterations, &eigenvalue, eigenvector);
-    // Chuẩn hoá vectơ riêng để biến đổi phần tử cuối cùng của vectơ riêng về 1
-    double norm = eigenvector[n-1];
-    for (int i = 0; i < n; i++) {
-        eigenvector[i] /= norm;
+    if (m != n) {
+        show_message("Ma trận không vuông!");
+    } else {
+        find_eigenvalue_and_eigenvector(matrix, epsilon, max_iterations, &eigenvalue, eigenvector);
+        // Chuẩn hoá vectơ riêng để biến đổi phần tử cuối cùng của vectơ riêng về 1
+        double norm = eigenvector[n-1];
+        for (int i = 0; i < n; i++) {
+            eigenvector[i] /= norm;
+        }
+    
+        gchar* eigenvalue_text = g_strdup_printf("Trị riêng: %.4lf", eigenvalue);
+        gchar* eigenvector_text = g_strdup("Vector riêng tương ứng:\n");
+        for (int i = 0; i < n-1; i++) {
+            gchar* number_text = g_strdup_printf("%.4lf ", eigenvector[i]);
+            eigenvector_text = g_strconcat(eigenvector_text, number_text, NULL);
+            g_free(number_text);
+        }
+        eigenvector_text = g_strconcat(eigenvector_text, "1", NULL);
+    
+        GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s\n%s", eigenvalue_text, eigenvector_text);
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    
+        g_free(eigenvalue_text);
+        g_free(eigenvector_text);
+        free(eigenvector);
     }
-
-    gchar* eigenvalue_text = g_strdup_printf("Trị riêng: %.4lf", eigenvalue);
-    gchar* eigenvector_text = g_strdup("Vector riêng tương ứng:\n");
-    for (int i = 0; i < n-1; i++) {
-        gchar* number_text = g_strdup_printf("%.4lf ", eigenvector[i]);
-        eigenvector_text = g_strconcat(eigenvector_text, number_text, NULL);
-        g_free(number_text);
-    }
-    eigenvector_text = g_strconcat(eigenvector_text, "1", NULL);
-
-    GtkWidget* dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s\n%s", eigenvalue_text, eigenvector_text);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-
-    g_free(eigenvalue_text);
-    g_free(eigenvector_text);
-    free(eigenvector);
 }
 
 void rank_button_clicked(GtkWidget *widget, gpointer data) {
