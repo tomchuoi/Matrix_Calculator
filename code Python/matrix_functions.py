@@ -119,7 +119,6 @@ def gauss_jordan_inverse(matrix):
 
     return inverse_matrix
 
-
 def calculate_matrix_rank(matrix):
     matrix = read_matrix(file_path)
     num_rows = len(matrix)
@@ -146,10 +145,6 @@ def calculate_matrix_rank(matrix):
                     matrix[i][row] = matrix[i][rank]
 
     return rank
-
-def submatrix(matrix, i, j):
-    # Trả lại ma trận con bằng cách bỏ hàng i cột j
-    return [row[:j] + row[j + 1:] for row in (matrix[:i] + matrix[i + 1:])]
 
 def matrix_determinant(matrix):
     rows = len(matrix)
