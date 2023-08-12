@@ -152,18 +152,18 @@ def submatrix(matrix, i, j):
     return [row[:j] + row[j + 1:] for row in (matrix[:i] + matrix[i + 1:])]
 
 def matrix_determinant(matrix):
-    n = len(matrix)
+    rows = len(matrix)
+    det = 1.0
 
-    # Nếu là ma trận 2x2
-    if n == 2:
-        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+    for k in range(rows):
+        for i in range(k + 1, rows):
+            factor = matrix[i][k] / matrix[k][k]
 
-    det = 0
+            for j in range(k, rows):
+                matrix[i][j] -= factor * matrix[k][j]
 
-    for j in range(n):
-        sign = (-1) ** j
-        cofactor = matrix_determinant(submatrix(matrix, 0, j))
-        det += sign * matrix[0][j] * cofactor
+    for i in range(rows):
+        det *= matrix[i][i]
 
     return det
 
